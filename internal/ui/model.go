@@ -25,7 +25,7 @@ type Model struct {
 func InitialModel() Model {
 	return Model{
 		state:   menuView,
-		choices: []string{"NFL Games", "NBA Games", "NCAA Basketball", "NOT IMPLEMENTED"},
+		choices: []string{"NFL Games", "NBA Games", "NCAA Basketball", "Exit"},
 	}
 }
 
