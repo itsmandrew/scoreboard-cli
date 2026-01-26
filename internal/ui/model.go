@@ -44,31 +44,18 @@ func (m Model) Init() tea.Cmd {
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
-		case "up", "k":
-			if m.state == menuView && m.cursor > 0 {
-				m.cursor--
-			}
-		case "down", "j":
-			if m.state == menuView && m.cursor < len(m.choices)-1 {
-				m.cursor++
-			}
-		case "enter":
-			if m.state == menuView {
-				m.selected = m.choices[m.cursor]
-				if m.selected == "Exit" {
-					return m, tea.Quit
-				}
-				m.loading = true
-
-				return m, tea.Batch(m.spinner.Tick, m.simulateFetch())
-			}
-			m.state = menuView
-			m.loading = false
 		}
+		if m.loading {
+			return m, nil
+		}
+
+		return m.handleKeyInput(msg)
+
 	case string:
 		m.loading = false
 		m.state = resultView
@@ -79,6 +66,36 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.spinner, cmd = m.spinner.Update(msg)
 		return m, cmd
 	}
+	return m, nil
+}
+
+func (m *Model) handleKeyInput(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+	if m.state == resultView {
+		if msg.String() == "enter" {
+			m.state = menuView
+		}
+		return m, nil
+	}
+
+	// Menu Navigation Logic
+	switch msg.String() {
+	case "up", "k":
+		if m.cursor > 0 {
+			m.cursor--
+		}
+	case "down", "j":
+		if m.cursor < len(m.choices)-1 {
+			m.cursor++
+		}
+	case "enter":
+		m.selected = m.choices[m.cursor]
+		if m.selected == "Exit" {
+			return m, tea.Quit
+		}
+		m.loading = true
+		return m, tea.Batch(m.spinner.Tick, m.simulateFetch())
+	}
+
 	return m, nil
 }
 
