@@ -24,14 +24,21 @@ var (
 
 	// Text Styles
 	TitleStyle = lipgloss.NewStyle().
-			Foreground(MainColor).
-			Padding(1, 0).
+			Foreground(White).
+			Border(lipgloss.DoubleBorder()).
+			BorderForeground(White).
+			Padding(1, 3).
 			Bold(true).
 			Align(lipgloss.Center).
 			Width(60)
 
-	ErrorTitleStyle = TitleStyle.Copy().
-			Background(ErrorColor)
+	ErrorTitleStyle = lipgloss.NewStyle().
+				Foreground(White).
+				Background(ErrorColor).
+				Padding(1, 0).
+				Bold(true).
+				Align(lipgloss.Center).
+				Width(60)
 
 	// Added missing subtle and italic styles
 	SubtleStyle = lipgloss.NewStyle().
@@ -59,8 +66,13 @@ var (
 			Height(2).
 			Align(lipgloss.Center)
 
-	LogoBoxSelectedStyle = LogoBoxStyle.Copy().
+	LogoBoxSelectedStyle = lipgloss.NewStyle().
+				Border(lipgloss.RoundedBorder()).
 				BorderForeground(MainColor).
+				Padding(0, 1).
+				Width(7).
+				Height(2).
+				Align(lipgloss.Center).
 				Bold(true)
 
 	// Menu label styles
@@ -68,7 +80,9 @@ var (
 			Width(12).
 			Align(lipgloss.Center)
 
-	MenuLabelSelectedStyle = MenuLabelStyle.Copy().
+	MenuLabelSelectedStyle = lipgloss.NewStyle().
+				Width(12).
+				Align(lipgloss.Center).
 				Foreground(MainColor).
 				Bold(true)
 )
