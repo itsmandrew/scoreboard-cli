@@ -88,7 +88,14 @@ func (m Model) menuView() string {
 
 	// Join all cards horizontally with spacing
 	menu := lipgloss.JoinHorizontal(lipgloss.Top, cards...)
-	b.WriteString(menu + "\n\n")
+
+	// Center the menu within the container
+	centeredMenu := lipgloss.NewStyle().
+		Width(60).
+		Align(lipgloss.Center).
+		Render(menu)
+
+	b.WriteString(centeredMenu + "\n\n")
 
 	b.WriteString(fmt.Sprintf("%s", SubtleStyle.Render("(h/l or ←/→ to move • enter to select)")))
 	return b.String()
