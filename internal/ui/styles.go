@@ -24,10 +24,11 @@ var (
 
 	// Text Styles
 	TitleStyle = lipgloss.NewStyle().
-			Foreground(White).
-			Background(MainColor).
-			Padding(0, 1).
-			Bold(true)
+			Foreground(MainColor).
+			Padding(1, 0).
+			Bold(true).
+			Align(lipgloss.Center).
+			Width(60)
 
 	ErrorTitleStyle = TitleStyle.Copy().
 			Background(ErrorColor)

@@ -29,7 +29,7 @@ func (m Model) View() string {
 
 func (m Model) menuView() string {
 	var b strings.Builder
-	b.WriteString(TitleStyle.Render(" SCOREBOARD CLI MENU ") + "\n\n")
+	b.WriteString(TitleStyle.Render(" ⚡ SCOREBOARD ⚡ ") + "\n\n")
 
 	// Create all cards
 	var cards []string
