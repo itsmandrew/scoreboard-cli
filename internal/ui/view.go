@@ -31,18 +31,66 @@ func (m Model) menuView() string {
 	var b strings.Builder
 	b.WriteString(TitleStyle.Render(" SCOREBOARD CLI MENU ") + "\n\n")
 
-	for i, choice := range m.choices {
-		cursor := "  "
-		label := choice
+	// Create all cards
+	var cards []string
+	for i, logo := range leagueLogos {
+		// Choose styles based on selection
+		boxStyle := LogoBoxStyle
+		labelStyle := MenuLabelStyle
+		logoColor := logo.Color
 
 		if m.cursor == i {
-			cursor = "> "
-			label = lipgloss.NewStyle().Foreground(MainColor).Bold(true).Render(choice)
+			boxStyle = LogoBoxSelectedStyle
+			labelStyle = MenuLabelSelectedStyle
+			logoColor = MainColor // Purple when selected
 		}
-		b.WriteString(fmt.Sprintf("%s%s\n", cursor, label))
+
+		// Build logo box content with colored symbols
+		var logoLines []string
+		for _, line := range logo.Lines {
+			logoLines = append(logoLines,
+				lipgloss.NewStyle().Foreground(logoColor).Render(line))
+		}
+		logoContent := strings.Join(logoLines, "\n")
+
+		// Render the logo box and label
+		logoBox := boxStyle.Render(logoContent)
+
+		// Simplify label (just league abbreviation)
+		labelText := logo.Name
+		if logo.Name == "NBA Games" {
+			labelText = "NBA"
+		} else if logo.Name == "NFL Games" {
+			labelText = "NFL"
+		} else if logo.Name == "NCAA Basketball" {
+			labelText = "NCAA"
+		} else {
+			labelText = "Exit"
+		}
+		label := labelStyle.Render(labelText)
+
+		// Create cursor indicator below selected item
+		cursor := labelStyle.Render(" ")
+		if m.cursor == i {
+			cursor = labelStyle.Render("^")
+		}
+
+		// Stack logo box, label, and cursor vertically
+		card := lipgloss.JoinVertical(
+			lipgloss.Center,
+			logoBox,
+			label,
+			cursor,
+		)
+
+		cards = append(cards, card)
 	}
 
-	b.WriteString(fmt.Sprintf("\n%s", SubtleStyle.Render("(j/k to move • enter to select)")))
+	// Join all cards horizontally with spacing
+	menu := lipgloss.JoinHorizontal(lipgloss.Top, cards...)
+	b.WriteString(menu + "\n\n")
+
+	b.WriteString(fmt.Sprintf("%s", SubtleStyle.Render("(h/l or ←/→ to move • enter to select)")))
 	return b.String()
 }
 

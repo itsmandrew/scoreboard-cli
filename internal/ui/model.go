@@ -14,6 +14,47 @@ const (
 	resultView
 )
 
+type LeagueLogo struct {
+	Name  string
+	Lines []string // 2 lines of ASCII art
+	Color lipgloss.Color
+}
+
+var leagueLogos = []LeagueLogo{
+	{
+		Name: "NBA Games",
+		Lines: []string{
+			" ● ● ",
+			" ███ ",
+		},
+		Color: NBAColor,
+	},
+	{
+		Name: "NFL Games",
+		Lines: []string{
+			" ╔═╗ ",
+			" ║ ║ ",
+		},
+		Color: NFLColor,
+	},
+	{
+		Name: "NCAA Basketball",
+		Lines: []string{
+			" ╠══ ",
+			" ╚══ ",
+		},
+		Color: NCAAColor,
+	},
+	{
+		Name: "Exit",
+		Lines: []string{
+			" ╳ ╳ ",
+			"  ╳  ",
+		},
+		Color: ExitColor,
+	},
+}
+
 type Model struct {
 	state    sessionState
 	choices  []string

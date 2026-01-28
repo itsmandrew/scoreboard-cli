@@ -60,16 +60,16 @@ func (m Model) handleKeyEvents(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 
 func (m Model) handleMenuNavigation(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch msg.String() {
-	case "up", "k":
+	case "left", "h":
 		if m.cursor > 0 {
 			m.cursor--
 		}
-	case "down", "j":
-		if m.cursor < len(m.choices)-1 {
+	case "right", "l":
+		if m.cursor < len(leagueLogos)-1 {
 			m.cursor++
 		}
 	case "enter":
-		m.selected = m.choices[m.cursor]
+		m.selected = leagueLogos[m.cursor].Name
 		if m.selected == "Exit" {
 			return m, tea.Quit
 		}
