@@ -136,7 +136,7 @@ func (m Model) errorView() string {
 	)
 }
 
-// Render NBA game data using a scrollable table
+// renderNBAGamesTable displays NBA games in a scrollable table format
 func (m Model) renderNBAGamesTable() string {
 	if len(m.nbaGames) == 0 {
 		return SubtleStyle.Render("No games scheduled for today")
@@ -148,8 +148,9 @@ func (m Model) renderNBAGamesTable() string {
 	return b.String()
 }
 
-// Create a scrollable table for NBA games with color scheme matching
+// createNBATable builds a scrollable table from NBA game data with custom styling
 func createNBATable(games []sports.Game) table.Model {
+	// Define table columns
 	columns := []table.Column{
 		{Title: "Home", Width: 15},
 		{Title: "Away", Width: 15},
@@ -157,6 +158,7 @@ func createNBATable(games []sports.Game) table.Model {
 		{Title: "Status", Width: 15},
 	}
 
+	// Build rows from game data
 	var rows []table.Row
 	for _, game := range games {
 		rows = append(rows, table.Row{
@@ -167,6 +169,7 @@ func createNBATable(games []sports.Game) table.Model {
 		})
 	}
 
+	// Create table with focused state and fixed height
 	t := table.New(
 		table.WithColumns(columns),
 		table.WithRows(rows),
@@ -174,7 +177,7 @@ func createNBATable(games []sports.Game) table.Model {
 		table.WithHeight(10),
 	)
 
-	// Apply color scheme with beige highlight
+	// Apply custom styling for beige row highlighting
 	s := table.DefaultStyles()
 	s.Header = s.Header.
 		BorderStyle(lipgloss.NormalBorder()).
@@ -182,8 +185,8 @@ func createNBATable(games []sports.Game) table.Model {
 		BorderBottom(true).
 		Bold(true)
 	s.Selected = s.Selected.
-		Foreground(lipgloss.Color("16")).  // Black text
-		Background(lipgloss.Color("180")). // Beige/tan background
+		Foreground(lipgloss.Color("16")). // Black text for contrast
+		Background(HighlightColor).       // Beige background for selected row
 		Bold(true)
 	t.SetStyles(s)
 

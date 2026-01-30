@@ -26,7 +26,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.loading = false
 		m.state = resultView
 		m.nbaGames = msg
-		m.gamesTable = createNBATable(m.nbaGames)
+		m.gamesTable = createNBATable(m.nbaGames) // Build scrollable table from game data
 		return m, nil
 
 	case errMsg:
@@ -58,7 +58,7 @@ func (m Model) handleKeyEvents(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.state = menuView
 			m.err = nil
 		} else if m.selected == "NBA Games" {
-			// Handle table navigation
+			// Handle scrollable table navigation with arrow keys or vim bindings
 			switch msg.String() {
 			case "up", "k":
 				m.gamesTable.MoveUp(1)
