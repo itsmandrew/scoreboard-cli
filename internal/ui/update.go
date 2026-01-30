@@ -26,6 +26,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.loading = false
 		m.state = resultView
 		m.nbaGames = msg
+		m.gamesTable = createNBATable(m.nbaGames)
 		return m, nil
 
 	case errMsg:
@@ -56,6 +57,14 @@ func (m Model) handleKeyEvents(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		if msg.String() == "enter" || msg.String() == "esc" {
 			m.state = menuView
 			m.err = nil
+		} else if m.selected == "NBA Games" {
+			// Handle table navigation
+			switch msg.String() {
+			case "up", "k":
+				m.gamesTable.MoveUp(1)
+			case "down", "j":
+				m.gamesTable.MoveDown(1)
+			}
 		}
 		return m, nil
 	}

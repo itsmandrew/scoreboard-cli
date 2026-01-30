@@ -88,4 +88,23 @@ var (
 				Align(lipgloss.Center).
 				Foreground(HighlightColor).
 				Bold(true)
+
+	// Table styles for NBA games
+	TableHeaderStyle = lipgloss.NewStyle().
+				Foreground(White).
+				Bold(true).
+				BorderStyle(lipgloss.NormalBorder()).
+				BorderForeground(SubtleColor).
+				BorderBottom(true).
+				Padding(0, 1)
+
+	TableSelectedStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("#1a1a1a")).
+				Background(HighlightColor).
+				Bold(true).
+				Padding(0, 1)
+
+	TableCellStyle = lipgloss.NewStyle().
+			Foreground(White).
+			Padding(0, 1)
 )

@@ -2,6 +2,7 @@ package ui
 
 import (
 	"github.com/charmbracelet/bubbles/spinner"
+	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/itsmandrew/scoreboard-tui/internal/sports"
@@ -56,15 +57,16 @@ var leagueLogos = []LeagueLogo{
 }
 
 type Model struct {
-	state    sessionState
-	choices  []string
-	cursor   int
-	selected string
-	loading  bool
-	spinner  spinner.Model
-	apiKey   string
-	nbaGames []sports.Game
-	err      error
+	state      sessionState
+	choices    []string
+	cursor     int
+	selected   string
+	loading    bool
+	spinner    spinner.Model
+	apiKey     string
+	nbaGames   []sports.Game
+	gamesTable table.Model
+	err        error
 }
 
 func InitialModel(apiKey string) Model {

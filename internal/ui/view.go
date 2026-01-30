@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/itsmandrew/scoreboard-tui/internal/sports"
 )
@@ -113,7 +114,7 @@ func (m Model) loadingView() string {
 func (m Model) resultView() string {
 	content := ""
 	if m.selected == "NBA Games" {
-		content = m.renderNBAGames()
+		content = m.renderNBAGamesTable()
 	} else {
 		content = fmt.Sprintf("Returning data for: %s", m.selected)
 	}
@@ -122,7 +123,7 @@ func (m Model) resultView() string {
 		"%s\n\n%s\n\n%s",
 		TitleStyle.Render(" SCOREBOARD "),
 		content,
-		ItalicStyle.Render("Press Enter to go back..."),
+		ItalicStyle.Render("(↑/↓ to scroll • Enter to go back)"),
 	)
 }
 
@@ -135,21 +136,56 @@ func (m Model) errorView() string {
 	)
 }
 
-// Format fetched NBA game data into a table-like string
-func (m Model) renderNBAGames() string {
+// Render NBA game data using a scrollable table
+func (m Model) renderNBAGamesTable() string {
 	if len(m.nbaGames) == 0 {
 		return SubtleStyle.Render("No games scheduled for today")
 	}
 
 	var b strings.Builder
 	b.WriteString(fmt.Sprintf("NBA Scores - %s\n\n", time.Now().Format("Jan 02, 2006")))
-
-	for _, game := range m.nbaGames {
-		home := TeamStyle.Render(fmt.Sprintf("%s %d", game.HomeTeam.Abbreviation, game.HomeTeamScore))
-		away := TeamStyle.Render(fmt.Sprintf("%s %d", game.VisitorTeam.Abbreviation, game.VisitorTeamScore))
-		status := StatusStyle.Render(sports.FormatStatus(game.Status))
-
-		b.WriteString(fmt.Sprintf("%s vs %s — %s\n", home, away, status))
-	}
+	b.WriteString(m.gamesTable.View())
 	return b.String()
+}
+
+// Create a scrollable table for NBA games with color scheme matching
+func createNBATable(games []sports.Game) table.Model {
+	columns := []table.Column{
+		{Title: "Home", Width: 15},
+		{Title: "Away", Width: 15},
+		{Title: "Score", Width: 15},
+		{Title: "Status", Width: 15},
+	}
+
+	var rows []table.Row
+	for _, game := range games {
+		rows = append(rows, table.Row{
+			game.HomeTeam.Abbreviation,
+			game.VisitorTeam.Abbreviation,
+			fmt.Sprintf("(%d - %d)", game.HomeTeamScore, game.VisitorTeamScore),
+			sports.FormatStatus(game.Status),
+		})
+	}
+
+	t := table.New(
+		table.WithColumns(columns),
+		table.WithRows(rows),
+		table.WithFocused(true),
+		table.WithHeight(10),
+	)
+
+	// Apply color scheme with beige highlight
+	s := table.DefaultStyles()
+	s.Header = s.Header.
+		BorderStyle(lipgloss.NormalBorder()).
+		BorderForeground(lipgloss.Color("241")).
+		BorderBottom(true).
+		Bold(true)
+	s.Selected = s.Selected.
+		Foreground(lipgloss.Color("16")).  // Black text
+		Background(lipgloss.Color("180")). // Beige/tan background
+		Bold(true)
+	t.SetStyles(s)
+
+	return t
 }
