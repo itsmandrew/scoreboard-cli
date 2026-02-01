@@ -10,6 +10,8 @@ import (
 
 const baseURL = "https://api.balldontlie.io/v1/games"
 
+var gamesCache = NewCache[[]Game](30 * time.Second)
+
 type GameResponse struct {
 	Data []Game `json:"data"`
 }
@@ -29,6 +31,12 @@ type Team struct {
 }
 
 func FetchNBAScores(apiKey string) ([]Game, error) {
+	// Check cache first
+	if cached, ok := gamesCache.Get(); ok {
+		return cached, nil
+	}
+
+	// Cache miss or expired, fetch from API
 	today := time.Now().Format("2006-01-02")
 
 	url := fmt.Sprintf("%s?dates[]=%s", baseURL, today)
@@ -65,6 +73,9 @@ func FetchNBAScores(apiKey string) ([]Game, error) {
 	if err := json.Unmarshal(body, &gameData); err != nil {
 		return nil, err
 	}
+
+	// Update cache with fresh data
+	gamesCache.Set(gameData.Data)
 
 	return gameData.Data, nil
 }
