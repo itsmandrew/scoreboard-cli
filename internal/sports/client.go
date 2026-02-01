@@ -17,6 +17,7 @@ type GameResponse struct {
 type Game struct {
 	ID               int    `json:"id"`
 	Status           string `json:"status"`
+	Time             string `json:"time"`
 	HomeTeamScore    int    `json:"home_team_score"`
 	VisitorTeamScore int    `json:"visitor_team_score"`
 	HomeTeam         Team   `json:"home_team"`

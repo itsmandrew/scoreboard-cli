@@ -153,10 +153,11 @@ func (m Model) renderNBAGamesTable() string {
 func createNBATable(games []sports.Game) table.Model {
 	// Define table columns
 	columns := []table.Column{
-		{Title: "Home", Width: 15},
-		{Title: "Away", Width: 15},
-		{Title: "Score", Width: 15},
-		{Title: "Status", Width: 15},
+		{Title: "Home", Width: 8},
+		{Title: "Away", Width: 8},
+		{Title: "Score", Width: 14},
+		{Title: "Status", Width: 14},
+		{Title: "Time", Width: 14},
 	}
 
 	// Build rows from game data
@@ -167,6 +168,7 @@ func createNBATable(games []sports.Game) table.Model {
 			game.VisitorTeam.Abbreviation,
 			fmt.Sprintf("(%d - %d)", game.HomeTeamScore, game.VisitorTeamScore),
 			sports.FormatStatus(game.Status),
+			game.Time,
 		})
 	}
 
